@@ -1,35 +1,38 @@
 #!/usr/bin/python3
-"""log"""
-
-
+"""
+Script that reads stdin line by line and computes metrics
+"""
 import sys
 
+total_size = 0
+counter = 0
 
-s = {
-    "200": 0, "301": 0, "400": 0, "401": 0,
-    "403": 0, "404": 0, "405": 0, "500": 0}
-p = 0
-size = 0
+dict_codes_counter = {'200': 0, '301': 0, '400': 0, '401': 0,
+                      '403': 0, '404': 0, '405': 0, '500': 0}
+
 try:
     for line in sys.stdin:
-        if p == 10:
-            print("File size: {}".format(size))
-            for k, v in sorted(s.items()):
+        line_list = line.split(" ")
+        if len(line_list) > 2:
+            code = line_list[-2]
+            size = int(line_list[-1])
+            if code in dict_codes_counter.keys():
+                dict_codes_counter[code] += 1
+            total_size += size
+            counter += 1
+
+        if counter == 10:
+            print("File size: {:d}".format(total_size))
+            for k, v in sorted(dict_codes_counter.items()):
                 if v != 0:
-                    print("{}: {}".format(k, v))
-            p = 1
-        else:
-            p += 1
-        split = line.split()
-        if len(split) > 2:
-            size += int(split[-1])
-            for k, v in s.items():
-                if split[-2] == k:
-                    s[k] = s[k] + 1
-except KeyboardInterrupt:
+                    print("{}: {:d}".format(k, v))
+            counter = 0
+
+except Exception:
     pass
+
 finally:
-    print("File size: {}".format(size))
-    for k, v in sorted(s.items()):
+    print("File size: {}".format(total_size))
+    for k, v in sorted(dict_codes_counter.items()):
         if v != 0:
             print("{}: {}".format(k, v))
