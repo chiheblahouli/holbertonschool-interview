@@ -1,8 +1,10 @@
-#include "sabdpiles.h"
 
- /**
+#include "sandpiles.h"
+
+/**
  * print_grid - prints "=" + a newline + a grid
  * @grid: the grid the print
+ * Return: void
  */
 void print_grid(int grid[3][3])
 {
